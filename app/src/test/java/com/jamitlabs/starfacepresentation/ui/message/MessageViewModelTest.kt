@@ -1,12 +1,15 @@
-package com.jamitlabs.starfacepresentation.ui.main
+package com.jamitlabs.starfacepresentation.ui.message
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
+import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
-import com.jamitlabs.starfacepresentation.ui.message.MessageViewModel
-import com.jamitlabs.starfacepresentation.ui.message.Message
+import com.jamitlabs.starfacepresentation.util.livedata.Event
+import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.TestingSchedulerProvider
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.Single
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -17,6 +20,36 @@ class MessageViewModelTest {
 
     @get:Rule
     val taskExecutorRule = InstantTaskExecutorRule()
+
+    @Test
+    fun `Test send message failure`() {
+        val sentMessageText = "Foo"
+        val errorMessage = "Bar"
+
+        val mockRepository = mock<StarfaceRepository> {
+            on { sendMessage(sentMessageText) } doReturn  Single.error(RuntimeException(sentMessageText))
+        }
+
+        val resourceProvider = mock<ResourceProvider> {
+            on { getString(R.string.something_went_wrong) } doReturn errorMessage
+        }
+
+        val schedulerProvider = TestingSchedulerProvider()
+
+        val mainViewModel = MessageViewModel(mockRepository, schedulerProvider, resourceProvider)
+
+        val observer = mock<Observer<Event<MessageEvent>>>()
+
+        mainViewModel.events.observeForever(observer)
+
+        mainViewModel.messageText.set(sentMessageText)
+
+        mainViewModel.onSendMessage()
+
+        TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(1, TimeUnit.SECONDS)
+
+        verify(observer).onChanged(Event(ShowError(errorMessage)))
+    }
 
     @Test
     fun `Test send and receive message`() {
@@ -31,8 +64,9 @@ class MessageViewModelTest {
             )
         }
 
+        val resourceProvider = mock<ResourceProvider> {}
         val schedulerProvider = TestingSchedulerProvider()
-        val mainViewModel = MessageViewModel(mockRepository, schedulerProvider)
+        val mainViewModel = MessageViewModel(mockRepository, schedulerProvider, resourceProvider)
 
         assertTrue(
                 "Displayed messages should be empty",

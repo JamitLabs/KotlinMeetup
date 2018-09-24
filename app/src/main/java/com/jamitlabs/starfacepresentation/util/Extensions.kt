@@ -1,8 +1,12 @@
 package com.jamitlabs.starfacepresentation.util
 
-import androidx.lifecycle.LiveData
-import com.jamitlabs.starfacepresentation.util.test.TestObserver
+import android.view.View
+import de.mateware.snacky.Snacky
 
-fun <T> LiveData<T>.testObserver() = TestObserver<T>().also {
-    observeForever(it)
+fun View.snackError(message: CharSequence) {
+
+    Snacky.builder().setView(this).setText(message).error().show()
+
+    return
 }
+

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">StarfacePresentation</string>
     <string name="send_msg">Send Message</string>
+    <string name="something_went_wrong">Something went wrong</string>
 </resources>

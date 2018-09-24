@@ -3,8 +3,11 @@ package com.jamitlabs.starfacepresentation.ui.message
 import androidx.databinding.Bindable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
+import com.jamitlabs.starfacepresentation.util.livedata.Event
+import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.SchedulerProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.with
 import com.jamitlabs.starfacepresentation.viewmodel.BaseViewModel
@@ -14,16 +17,21 @@ import io.reactivex.rxkotlin.subscribeBy
 import me.tatarka.bindingcollectionadapter2.BR
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 import me.tatarka.bindingcollectionadapter2.itembindings.OnItemBindClass
-import timber.log.Timber
+
+sealed class MessageEvent
+data class ShowError(val message: String): MessageEvent()
 
 class MessageViewModel(
         private val starfaceRepository: StarfaceRepository,
-        private val schedulerProvider: SchedulerProvider
+        private val schedulerProvider: SchedulerProvider,
+        private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
     val messageText = ObservableField<String>()
+
+    val events = MutableLiveData<Event<MessageEvent>>()
 
     @Bindable
     var scrollToBottom = true
@@ -72,7 +80,7 @@ class MessageViewModel(
                 .doOnSubscribe { addMessage(message, Message.MessageType.SENT) }
                 .subscribeBy(
                         onSuccess = { response -> addMessage(response, Message.MessageType.RECEIVED) },
-                        onError = Timber::e
+                        onError = { events.postValue(Event(ShowError(resourceProvider.getString(R.string.something_went_wrong)))) }
                 )
     }
 
