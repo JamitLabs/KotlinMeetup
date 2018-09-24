@@ -1,0 +1,16 @@
+package com.jamitlabs.starfacepresentation
+
+import android.app.Application
+import timber.log.Timber
+
+class StarfacePresentationApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
+    }
+
+}

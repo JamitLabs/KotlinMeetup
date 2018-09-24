@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.jamitlabs.starfacepresentation.ui.message.MessageViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/default_side_margin"
+            app:itemBinding="@{viewModel.bindings}"
+            app:items="@{viewModel.messages}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/button_send"
+            app:layout_constraintEnd_toEndOf="@id/button_send"
+            app:layout_constraintStart_toStartOf="@id/edit_text_msg"
+            app:layout_constraintTop_toTopOf="parent"
+            app:scrollToBottom="@{viewModel.scrollToBottom}"/>
+
+        <EditText
+            android:id="@+id/edit_text_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_side_margin"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="@dimen/default_side_margin"
+            android:text="@={viewModel.messageText}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_send"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="200dp"/>
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_side_margin"
+            android:layout_marginBottom="@dimen/default_side_margin"
+            android:drawableEnd="@drawable/ic_send_black_24dp"
+            android:drawablePadding="@dimen/main_fragment_drawable_padding"
+            android:onClick="@{() -> viewModel.onSendMessage()}"
+            android:text="@string/send_msg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/edit_text_msg"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
