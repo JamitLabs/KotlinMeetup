@@ -1,7 +1,7 @@
 package com.jamitlabs.starfacepresentation.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.jamitlabs.starfacepresentation.R
 
 class MainActivity : AppCompatActivity() {

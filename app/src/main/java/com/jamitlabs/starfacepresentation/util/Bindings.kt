@@ -1,6 +1,5 @@
 package com.jamitlabs.starfacepresentation.util
 
-import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 
