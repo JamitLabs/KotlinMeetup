@@ -1,7 +1,6 @@
 package com.jamitlabs.starfacepresentation.ui.message.overview
 
 import android.os.Bundle
-import androidx.databinding.Bindable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.jamitlabs.starfacepresentation.R
@@ -42,8 +41,6 @@ class MessageViewModel(
     private val compositeDisposable = CompositeDisposable()
 
     val messageText = ObservableField<String>()
-
-    @Bindable
     var scrollToBottom = ObservableField<Event<Boolean>>()
 
     val messages = ObservableArrayList<Message>()

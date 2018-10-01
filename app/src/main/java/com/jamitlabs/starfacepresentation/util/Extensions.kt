@@ -1,7 +1,5 @@
 package com.jamitlabs.starfacepresentation.util
 
-import android.os.Handler
-import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan

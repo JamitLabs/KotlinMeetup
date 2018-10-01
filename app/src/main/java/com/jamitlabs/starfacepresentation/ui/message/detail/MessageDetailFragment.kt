@@ -18,8 +18,6 @@ class MessageDetailFragment : BaseFragment<FragmentMessageBinding, MessageDetail
         super.onViewModelInitialised()
 
         arguments?.getParcelable<Message>(KEY_MESSAGE)?.let { viewModel.displayMessage(it) }
-
     }
-
 }
 

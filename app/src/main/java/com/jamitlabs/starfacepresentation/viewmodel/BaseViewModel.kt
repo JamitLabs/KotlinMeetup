@@ -3,12 +3,13 @@ package com.jamitlabs.starfacepresentation.viewmodel
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 
-abstract class BaseViewModel : ObservableViewModel() {
+abstract class BaseViewModel : ViewModel() {
 
     val events = MutableLiveData<Event<CommonAction>>()
 
