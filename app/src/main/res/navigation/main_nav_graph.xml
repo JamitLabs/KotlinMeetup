@@ -6,6 +6,20 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.jamitlabs.starfacepresentation.ui.message.MessageFragment"
-        android:label="MainFragment"/>
+        android:name="com.jamitlabs.starfacepresentation.ui.message.overview.MessageFragment"
+        android:label="MainFragment">
+
+        <action
+            android:id="@+id/action_mainFragment_to_messageDetailFragment"
+            app:destination="@id/messageDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/messageDetailFragment"
+        android:name="com.jamitlabs.starfacepresentation.ui.message.detail.MessageDetailFragment"
+        android:label="MessageDetailFragment"/>
 </navigation>

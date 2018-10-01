@@ -1,58 +1,38 @@
 package com.jamitlabs.starfacepresentation.viewmodel
 
-import androidx.databinding.Observable
-import androidx.databinding.PropertyChangeRegistry
-import androidx.lifecycle.ViewModel
+import android.os.Bundle
+import androidx.annotation.IdRes
+import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
+import com.jamitlabs.starfacepresentation.R
+import com.jamitlabs.starfacepresentation.util.livedata.Event
 
-abstract class BaseViewModel: ViewModel(), Observable {
+abstract class BaseViewModel : ObservableViewModel() {
 
-    @Transient private var mCallbacks: PropertyChangeRegistry? = null
+    val events = MutableLiveData<Event<CommonAction>>()
 
-    override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
-        synchronized(this) {
-            if (mCallbacks == null) {
-                mCallbacks = PropertyChangeRegistry()
-            }
-        }
-        mCallbacks?.add(callback)
-    }
+    private fun postAction(commonAction: CommonAction) = events.postValue(Event(commonAction))
 
-    override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
-        synchronized(this) {
-            if (mCallbacks == null) {
-                return
-            }
-        }
-        mCallbacks?.remove(callback)
-    }
+    fun navigateTo(
+            @IdRes navigationTargetId: Int,
+            clearBackStack: Boolean = false,
+            args: Bundle? = null,
+            navOptions: NavOptions? = null,
+            extras: Navigator.Extras? = null
+    ) = postAction(NavigateTo(
+            navigationTargetId = navigationTargetId,
+            clearBackStack = clearBackStack,
+            args = args,
+            navOptions = navOptions,
+            extras = extras
+    ))
 
-    /**
-     * Notifies listeners that all properties of this instance have changed.
-     */
-    fun notifyChange() {
-        synchronized(this) {
-            if (mCallbacks == null) {
-                return
-            }
-        }
-        mCallbacks?.notifyCallbacks(this, 0, null)
-    }
+    fun showErrorSnackBar(message: String) = showSnackbar(ShowSnackbar(
+            message = message,
+            colorRes = R.color.colorNegative
+    ))
 
-    /**
-     * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with [Bindable] to generate a field in
-     * `BR` to be used as `fieldId`.
-     *
-     * @param fieldId The generated BR id for the Bindable field.
-     */
-    fun notifyPropertyChanged(fieldId: Int) {
-        synchronized(this) {
-            if (mCallbacks == null) {
-                return
-            }
-        }
-        mCallbacks?.notifyCallbacks(this, fieldId, null)
-    }
-
+    private fun showSnackbar(snackbarEvent: ShowSnackbar) = postAction(snackbarEvent)
 }
 

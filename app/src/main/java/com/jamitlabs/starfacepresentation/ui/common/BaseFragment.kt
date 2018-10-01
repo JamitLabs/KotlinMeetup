@@ -7,12 +7,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Observer
 import com.jamitlabs.starfacepresentation.BR
+import com.jamitlabs.starfacepresentation.util.navigateTo
+import com.jamitlabs.starfacepresentation.util.snack
+import com.jamitlabs.starfacepresentation.viewmodel.BaseViewModel
+import com.jamitlabs.starfacepresentation.viewmodel.NavigateTo
+import com.jamitlabs.starfacepresentation.viewmodel.ShowSnackbar
 import org.koin.android.viewmodel.ext.android.getViewModelByClass
+import timber.log.Timber
 import kotlin.reflect.KClass
 
-abstract class BaseFragment<Binding : ViewDataBinding, VM : ViewModel> : Fragment() {
+abstract class BaseFragment<Binding : ViewDataBinding, VM : BaseViewModel> : Fragment() {
 
     abstract val layoutId: Int
     abstract val viewModelClass: KClass<VM>
@@ -22,9 +28,12 @@ abstract class BaseFragment<Binding : ViewDataBinding, VM : ViewModel> : Fragmen
     protected lateinit var viewModel: VM
     protected lateinit var binding: Binding
 
+    open fun onViewModelInitialised() {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = getViewModelByClass(viewModelClass)
+        onViewModelInitialised()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,6 +41,20 @@ abstract class BaseFragment<Binding : ViewDataBinding, VM : ViewModel> : Fragmen
         binding.setVariable(variableId, viewModel)
 
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel.events.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                Timber.e(it.toString())
+                when(it) {
+                    is ShowSnackbar -> (activity?.currentFocus ?: binding.root).snack(it)
+                    is NavigateTo -> navigateTo(it)
+                }
+            }
+        })
     }
 }
 

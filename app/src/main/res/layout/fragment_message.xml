@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.jamitlabs.starfacepresentation.ui.message.MessageViewModel"/>
+            type="com.jamitlabs.starfacepresentation.ui.message.overview.MessageViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

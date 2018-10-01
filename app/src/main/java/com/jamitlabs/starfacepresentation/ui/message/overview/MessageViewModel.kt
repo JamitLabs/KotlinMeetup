@@ -1,11 +1,13 @@
-package com.jamitlabs.starfacepresentation.ui.message
+package com.jamitlabs.starfacepresentation.ui.message.overview
 
+import android.os.Bundle
 import androidx.databinding.Bindable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.lifecycle.MutableLiveData
 import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
+import com.jamitlabs.starfacepresentation.ui.message.Message
+import com.jamitlabs.starfacepresentation.ui.message.detail.MessageDetailFragment
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.SchedulerProvider
@@ -18,39 +20,46 @@ import me.tatarka.bindingcollectionadapter2.BR
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 import me.tatarka.bindingcollectionadapter2.itembindings.OnItemBindClass
 
-sealed class MessageEvent
-data class ShowError(val message: String): MessageEvent()
+interface OnMessageClickedListener {
+    fun onMessageClicked(message: Message)
+}
 
 class MessageViewModel(
         private val starfaceRepository: StarfaceRepository,
         private val schedulerProvider: SchedulerProvider,
         private val resourceProvider: ResourceProvider
-) : BaseViewModel() {
+) : BaseViewModel(), OnMessageClickedListener {
+
+    override fun onMessageClicked(message: Message) {
+        navigateTo(
+                navigationTargetId = R.id.action_mainFragment_to_messageDetailFragment,
+                args = Bundle().apply {
+                    putParcelable(MessageDetailFragment.KEY_MESSAGE, message)
+                }
+        )
+    }
 
     private val compositeDisposable = CompositeDisposable()
 
     val messageText = ObservableField<String>()
 
-    val events = MutableLiveData<Event<MessageEvent>>()
-
     @Bindable
-    var scrollToBottom = true
-        private set(value) {
-            field = value
-            notifyPropertyChanged(BR.scrollToBottom)
-        }
+    var scrollToBottom = ObservableField<Event<Boolean>>()
 
     val messages = ObservableArrayList<Message>()
     val bindings = object : OnItemBindClass<Message>() {
         override fun onItemBind(itemBinding: ItemBinding<*>, position: Int, item: Message) {
-            itemBinding.set(
-                    BR.viewModel,
-                    if (item.messageType == Message.MessageType.SENT) {
-                        R.layout.item_send_message
-                    } else {
-                        R.layout.item_received_message
-                    }
-            )
+            itemBinding
+                    .clearExtras()
+                    .set(
+                            BR.message,
+                            if (item.messageType == Message.MessageType.SENT) {
+                                R.layout.item_send_message
+                            } else {
+                                R.layout.item_received_message
+                            }
+                    )
+                    .bindExtra(BR.messageClickListener, this@MessageViewModel)
         }
     }
 
@@ -60,7 +69,7 @@ class MessageViewModel(
     }
 
     fun scrollToBottom() {
-        scrollToBottom = true
+        scrollToBottom.set(Event(true))
     }
 
     fun onSendMessage() {
@@ -80,7 +89,7 @@ class MessageViewModel(
                 .doOnSubscribe { addMessage(message, Message.MessageType.SENT) }
                 .subscribeBy(
                         onSuccess = { response -> addMessage(response, Message.MessageType.RECEIVED) },
-                        onError = { events.postValue(Event(ShowError(resourceProvider.getString(R.string.something_went_wrong)))) }
+                        onError = { showErrorSnackBar(resourceProvider.getString(R.string.something_went_wrong)) }
                 )
     }
 

@@ -4,9 +4,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
+import com.jamitlabs.starfacepresentation.ui.message.overview.MessageViewModel
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.TestingSchedulerProvider
+import com.jamitlabs.starfacepresentation.viewmodel.CommonAction
+import com.jamitlabs.starfacepresentation.viewmodel.ShowSnackbar
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -38,7 +41,7 @@ class MessageViewModelTest {
 
         val mainViewModel = MessageViewModel(mockRepository, schedulerProvider, resourceProvider)
 
-        val observer = mock<Observer<Event<MessageEvent>>>()
+        val observer = mock<Observer<Event<CommonAction>>>()
 
         mainViewModel.events.observeForever(observer)
 
@@ -48,7 +51,7 @@ class MessageViewModelTest {
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(1, TimeUnit.SECONDS)
 
-        verify(observer).onChanged(Event(ShowError(errorMessage)))
+        verify(observer).onChanged(Event(ShowSnackbar(errorMessage)))
     }
 
     @Test
@@ -77,26 +80,26 @@ class MessageViewModelTest {
         mainViewModel.onSendMessage()
 
         assertTrue(
-                "Text input should be cleared after sending a message",
+                "Text input should be cleared after sending a text",
                 mainViewModel.messageText.get() == null
         )
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(1, TimeUnit.SECONDS)
 
         assertTrue(
-                "Displayed messages should only contain the sent message",
+                "Displayed messages should only contain the sent text",
                 mainViewModel.messages == listOf(
-                        Message(message = sentMessageText, messageType = Message.MessageType.SENT)
+                        Message(text = sentMessageText, messageType = Message.MessageType.SENT)
                 )
         )
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(10, TimeUnit.SECONDS)
 
         assertTrue(
-                "Displayed messages should contain the sent and the received message",
+                "Displayed messages should contain the sent and the received text",
                 mainViewModel.messages == listOf(
-                        Message(message = sentMessageText, messageType = Message.MessageType.SENT),
-                        Message(message = receivedMessageText, messageType = Message.MessageType.RECEIVED)
+                        Message(text = sentMessageText, messageType = Message.MessageType.SENT),
+                        Message(text = receivedMessageText, messageType = Message.MessageType.RECEIVED)
                 ))
 
     }

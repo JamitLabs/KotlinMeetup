@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
 
         <variable
-            name="viewModel"
+            name="message"
             type="com.jamitlabs.starfacepresentation.ui.message.Message"/>
+
+        <variable
+            name="messageClickListener"
+            type="com.jamitlabs.starfacepresentation.ui.message.overview.OnMessageClickedListener"/>
     </data>
 
     <FrameLayout
@@ -19,13 +24,16 @@
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start">
+            android:layout_gravity="start"
+            android:onClick="@{() -> messageClickListener.onMessageClicked(message)}"
+            app:cardBackgroundColor="@color/colorNegative">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/message_item_padding"
-                android:text="@{viewModel.message}"
+                android:text="@{message.text}"
+                android:textColor="@color/white"
                 android:textSize="@dimen/default_text_size"
                 tools:text="FOO"/>
 
