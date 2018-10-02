@@ -1,7 +1,6 @@
-package com.jamitlabs.starfacepresentation.di
+package com.jamitlabs.starfacepresentation
 
 import android.app.Application
-import com.jamitlabs.starfacepresentation.StarfacePresentationApplication
 import com.jamitlabs.starfacepresentation.repository.RemoteStarfaceRepository
 import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
 import com.jamitlabs.starfacepresentation.ui.message.detail.MessageDetailViewModel

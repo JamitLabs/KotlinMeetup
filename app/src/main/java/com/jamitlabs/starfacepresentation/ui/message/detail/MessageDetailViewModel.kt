@@ -2,7 +2,7 @@ package com.jamitlabs.starfacepresentation.ui.message.detail
 
 import androidx.databinding.ObservableField
 import com.jamitlabs.starfacepresentation.ui.message.Message
-import com.jamitlabs.starfacepresentation.viewmodel.BaseViewModel
+import com.jamitlabs.starfacepresentation.base.BaseViewModel
 
 class MessageDetailViewModel : BaseViewModel() {
 

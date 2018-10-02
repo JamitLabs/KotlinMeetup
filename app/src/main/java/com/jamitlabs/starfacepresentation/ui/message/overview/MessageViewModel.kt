@@ -11,7 +11,7 @@ import com.jamitlabs.starfacepresentation.util.livedata.Event
 import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.SchedulerProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.with
-import com.jamitlabs.starfacepresentation.viewmodel.BaseViewModel
+import com.jamitlabs.starfacepresentation.base.BaseViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy

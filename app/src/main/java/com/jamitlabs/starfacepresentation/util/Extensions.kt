@@ -11,8 +11,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.jamitlabs.starfacepresentation.R
-import com.jamitlabs.starfacepresentation.viewmodel.NavigateTo
-import com.jamitlabs.starfacepresentation.viewmodel.ShowSnackbar
+import com.jamitlabs.starfacepresentation.base.NavigateTo
+import com.jamitlabs.starfacepresentation.base.ShowSnackbar
 import timber.log.Timber
 
 fun View.snack(showSnackbarEvent: ShowSnackbar): Snackbar = with(showSnackbarEvent) {
