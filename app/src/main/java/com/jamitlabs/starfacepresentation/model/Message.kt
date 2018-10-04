@@ -1,14 +1,12 @@
-package com.jamitlabs.starfacepresentation.ui.message
+package com.jamitlabs.starfacepresentation.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 @Parcelize
 data class Message(
         val text: String,
-        val messageType: MessageType,
-        val messageId: String = UUID.randomUUID().toString()
+        val messageType: MessageType
 ) : Parcelable {
 
     enum class MessageType {

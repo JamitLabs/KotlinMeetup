@@ -45,7 +45,9 @@ abstract class BaseFragment<Binding : ViewDataBinding, VM : BaseViewModel> : Fra
 
         viewModel.events.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
-                Timber.e(it.toString())
+
+                Timber.i(it.toString())
+
                 when(it) {
                     is ShowSnackbar -> (activity?.currentFocus ?: binding.root).snack(it)
                     is NavigateTo -> navigateTo(it)

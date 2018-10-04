@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jamitlabs.starfacepresentation.R
-import com.jamitlabs.starfacepresentation.ui.message.Message
+import com.jamitlabs.starfacepresentation.model.Message
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 
 @BindingAdapter("scrollToBottom")

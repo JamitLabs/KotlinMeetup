@@ -9,7 +9,7 @@
 
         <variable
             name="message"
-            type="com.jamitlabs.starfacepresentation.ui.message.Message"/>
+            type="com.jamitlabs.starfacepresentation.model.Message"/>
 
         <variable
             name="messageClickListener"

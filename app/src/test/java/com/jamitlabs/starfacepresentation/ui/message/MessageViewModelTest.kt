@@ -10,6 +10,7 @@ import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.TestingSchedulerProvider
 import com.jamitlabs.starfacepresentation.base.CommonAction
 import com.jamitlabs.starfacepresentation.base.ShowSnackbar
+import com.jamitlabs.starfacepresentation.model.Message
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -86,25 +87,21 @@ class MessageViewModelTest {
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(1, TimeUnit.SECONDS)
 
-        val sent = mainViewModel.messages
-                .filter { it.messageType == Message.MessageType.SENT }
-                .map { it.text }
-
         assertTrue(
                 "Displayed messages should only contain the sent text",
-                sent == listOf(sentMessageText)
+                mainViewModel.messages == listOf(
+                        Message(text = sentMessageText, messageType = Message.MessageType.SENT)
+                )
         )
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(10, TimeUnit.SECONDS)
 
-        val sentAndReceived = mainViewModel.messages
-                .map { it.text }
-
         assertTrue(
                 "Displayed messages should contain the sent and the received text",
-                sentAndReceived == listOf(
-                        sentMessageText,
-                        receivedMessageText))
+                mainViewModel.messages == listOf(
+                        Message(text = sentMessageText, messageType = Message.MessageType.SENT),
+                        Message(text = receivedMessageText, messageType = Message.MessageType.RECEIVED)
+                ))
 
     }
 }

@@ -5,7 +5,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
-import com.jamitlabs.starfacepresentation.ui.message.Message
+import com.jamitlabs.starfacepresentation.model.Message
 import com.jamitlabs.starfacepresentation.ui.message.detail.MessageDetailFragment
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
