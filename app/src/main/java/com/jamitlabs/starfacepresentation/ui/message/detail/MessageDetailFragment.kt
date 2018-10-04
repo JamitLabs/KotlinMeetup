@@ -2,7 +2,7 @@ package com.jamitlabs.starfacepresentation.ui.message.detail
 
 import com.jamitlabs.starfacepresentation.R
 import com.jamitlabs.starfacepresentation.databinding.FragmentMessageBinding
-import com.jamitlabs.starfacepresentation.ui.common.BaseFragment
+import com.jamitlabs.starfacepresentation.base.BaseFragment
 import com.jamitlabs.starfacepresentation.ui.message.Message
 
 class MessageDetailFragment : BaseFragment<FragmentMessageBinding, MessageDetailViewModel>() {

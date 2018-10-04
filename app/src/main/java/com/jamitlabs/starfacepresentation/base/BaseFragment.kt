@@ -1,4 +1,4 @@
-package com.jamitlabs.starfacepresentation.ui.common
+package com.jamitlabs.starfacepresentation.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +11,6 @@ import androidx.lifecycle.Observer
 import com.jamitlabs.starfacepresentation.BR
 import com.jamitlabs.starfacepresentation.util.navigateTo
 import com.jamitlabs.starfacepresentation.util.snack
-import com.jamitlabs.starfacepresentation.viewmodel.BaseViewModel
-import com.jamitlabs.starfacepresentation.viewmodel.NavigateTo
-import com.jamitlabs.starfacepresentation.viewmodel.ShowSnackbar
 import org.koin.android.viewmodel.ext.android.getViewModelByClass
 import timber.log.Timber
 import kotlin.reflect.KClass

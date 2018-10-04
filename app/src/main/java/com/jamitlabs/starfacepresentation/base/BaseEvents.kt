@@ -1,4 +1,4 @@
-package com.jamitlabs.starfacepresentation.viewmodel
+package com.jamitlabs.starfacepresentation.base
 
 import android.os.Bundle
 import androidx.annotation.ColorRes

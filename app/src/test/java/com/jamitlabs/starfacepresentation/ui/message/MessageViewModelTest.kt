@@ -8,8 +8,8 @@ import com.jamitlabs.starfacepresentation.ui.message.overview.MessageViewModel
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.TestingSchedulerProvider
-import com.jamitlabs.starfacepresentation.viewmodel.CommonAction
-import com.jamitlabs.starfacepresentation.viewmodel.ShowSnackbar
+import com.jamitlabs.starfacepresentation.base.CommonAction
+import com.jamitlabs.starfacepresentation.base.ShowSnackbar
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -30,7 +30,7 @@ class MessageViewModelTest {
         val errorMessage = "Bar"
 
         val mockRepository = mock<StarfaceRepository> {
-            on { sendMessage(sentMessageText) } doReturn  Single.error(RuntimeException(sentMessageText))
+            on { sendMessage(sentMessageText) } doReturn Single.error(RuntimeException(sentMessageText))
         }
 
         val resourceProvider = mock<ResourceProvider> {
@@ -86,21 +86,25 @@ class MessageViewModelTest {
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(1, TimeUnit.SECONDS)
 
+        val sent = mainViewModel.messages
+                .filter { it.messageType == Message.MessageType.SENT }
+                .map { it.text }
+
         assertTrue(
                 "Displayed messages should only contain the sent text",
-                mainViewModel.messages == listOf(
-                        Message(text = sentMessageText, messageType = Message.MessageType.SENT)
-                )
+                sent == listOf(sentMessageText)
         )
 
         TestingSchedulerProvider.TEST_SCHEDULER.advanceTimeBy(10, TimeUnit.SECONDS)
 
+        val sentAndReceived = mainViewModel.messages
+                .map { it.text }
+
         assertTrue(
                 "Displayed messages should contain the sent and the received text",
-                mainViewModel.messages == listOf(
-                        Message(text = sentMessageText, messageType = Message.MessageType.SENT),
-                        Message(text = receivedMessageText, messageType = Message.MessageType.RECEIVED)
-                ))
+                sentAndReceived == listOf(
+                        sentMessageText,
+                        receivedMessageText))
 
     }
 }
