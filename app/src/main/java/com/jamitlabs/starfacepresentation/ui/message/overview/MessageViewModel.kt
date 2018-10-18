@@ -4,14 +4,14 @@ import android.os.Bundle
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.jamitlabs.starfacepresentation.R
-import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
+import com.jamitlabs.starfacepresentation.base.BaseViewModel
 import com.jamitlabs.starfacepresentation.model.Message
+import com.jamitlabs.starfacepresentation.repository.StarfaceRepository
 import com.jamitlabs.starfacepresentation.ui.message.detail.MessageDetailFragment
 import com.jamitlabs.starfacepresentation.util.livedata.Event
 import com.jamitlabs.starfacepresentation.util.resources.ResourceProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.SchedulerProvider
 import com.jamitlabs.starfacepresentation.util.rxjava.with
-import com.jamitlabs.starfacepresentation.base.BaseViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -19,17 +19,32 @@ import me.tatarka.bindingcollectionadapter2.BR
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 import me.tatarka.bindingcollectionadapter2.itembindings.OnItemBindClass
 
-interface OnMessageClickedListener {
-    fun onMessageClicked(message: Message)
-}
-
 class MessageViewModel(
         private val starfaceRepository: StarfaceRepository,
         private val schedulerProvider: SchedulerProvider,
         private val resourceProvider: ResourceProvider
-) : BaseViewModel(), OnMessageClickedListener {
+) : BaseViewModel() {
 
-    override fun onMessageClicked(message: Message) {
+    private val compositeDisposable = CompositeDisposable()
+
+    val messageText = ObservableField<String>()
+    var scrollToBottom = ObservableField<Event<Boolean>>()
+
+    val messages = ObservableArrayList<MessageItemViewModel>()
+    val bindings = object : OnItemBindClass<MessageItemViewModel>() {
+        override fun onItemBind(itemBinding: ItemBinding<*>, position: Int, item: MessageItemViewModel) {
+            itemBinding.set(
+                    BR.viewModel,
+                    if (item.message.messageType == Message.MessageType.SENT) {
+                        R.layout.item_send_message
+                    } else {
+                        R.layout.item_received_message
+                    }
+            )
+        }
+    }
+
+    private fun onMessageClicked(message: Message) {
         navigateTo(
                 navigationTargetId = R.id.action_mainFragment_to_messageDetailFragment,
                 args = Bundle().apply {
@@ -38,30 +53,8 @@ class MessageViewModel(
         )
     }
 
-    private val compositeDisposable = CompositeDisposable()
-
-    val messageText = ObservableField<String>()
-    var scrollToBottom = ObservableField<Event<Boolean>>()
-
-    val messages = ObservableArrayList<Message>()
-    val bindings = object : OnItemBindClass<Message>() {
-        override fun onItemBind(itemBinding: ItemBinding<*>, position: Int, item: Message) {
-            itemBinding
-                    .clearExtras()
-                    .set(
-                            BR.message,
-                            if (item.messageType == Message.MessageType.SENT) {
-                                R.layout.item_send_message
-                            } else {
-                                R.layout.item_received_message
-                            }
-                    )
-                    .bindExtra(BR.messageClickListener, this@MessageViewModel)
-        }
-    }
-
     private fun addMessage(message: String, messageType: Message.MessageType) {
-        messages.add(Message(message, messageType))
+        messages.add(MessageItemViewModel(Message(message, messageType), this::onMessageClicked))
         scrollToBottom()
     }
 

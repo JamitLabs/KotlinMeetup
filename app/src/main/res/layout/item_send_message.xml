@@ -6,14 +6,9 @@
     >
 
     <data>
-
         <variable
-            name="message"
-            type="com.jamitlabs.starfacepresentation.model.Message"/>
-
-        <variable
-            name="messageClickListener"
-            type="com.jamitlabs.starfacepresentation.ui.message.overview.OnMessageClickedListener"/>
+            name="viewModel"
+            type="com.jamitlabs.starfacepresentation.ui.message.overview.MessageItemViewModel"/>
     </data>
 
     <FrameLayout
@@ -25,17 +20,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:onClick="@{() -> messageClickListener.onMessageClicked(message)}"
+            android:onClick="@{() -> viewModel.onMessageClicked()}"
             app:cardBackgroundColor="@color/colorNegative">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/message_item_padding"
-                android:text="@{message.text}"
+                android:text="@{viewModel.message.text}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/default_text_size"
-                tools:text="FOO"/>
+                tools:text="SENT"/>
 
         </androidx.cardview.widget.CardView>
 
